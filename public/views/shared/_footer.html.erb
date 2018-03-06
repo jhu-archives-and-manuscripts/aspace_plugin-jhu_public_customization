@@ -1,4 +1,60 @@
 <div class="container-fluid panel-footer">
+  <div class="row-fluid">
+    <div class="span8" id="contact_us_block">
+      <h1>Contact Us</h1>
+      <% mail_subject = "?subject=[#{t("plugins.jhu_public.brand.applabel")}] #{request.original_url}" %>
+      <% mail_title = "Contact Us about: #{URI.unescape(request.original_url)}" %>
+      <p><strong><%= t("plugins.jhu_public.contactus.ref_url.label").html_safe %></strong> <%= request.original_url %></p>
+      <!-- <p>
+          <%= t("plugins.jhu_public.contactus.phone.label").html_safe %>
+          <%= t("plugins.jhu_public.contactus.phone.value").html_safe %>
+        </p>
+        <p>
+          <%= t("plugins.jhu_public.contactus.email.label").html_safe %>
+          <%= link_to(t("plugins.jhu_public.contactus.email.value"),
+                      "mailto:#{t("plugins.jhu_public.contactus.email.value")}?subject=[#{t("plugins.jhu_public.brand.applabel")}] #{request.original_url}",
+                      :title => "Contact Us for: #{URI.unescape(request.original_url)}") %>
+        </p> -->
+      <!-- <p>
+          <%= t("plugins.jhu_public.contactus.address.label").html_safe %>
+          <%= t("plugins.jhu_public.contactus.address.value").html_safe %>
+        </p>
+        <p>
+          <%= t("plugins.jhu_public.peabody.name.short") %>:
+          <br /><%= link_to(t("plugins.jhu_public.peabody.email.value"),
+                            "mailto:#{t("plugins.jhu_public.peabody.email.value")}#{mail_subject}",
+                            :title => mail_title) %>
+          <br /><%= t("plugins.jhu_public.peabody.phone.value").html_safe %>
+        </p> -->
+      <% repositories = repository_list %>
+      <% unless repositories.blank? %>
+        <% admin_repo_uri = t("plugins.jhu_public.contactus.admin_repo.uri") %>
+        <% if @repo_info.present? %>
+          <br /><strong><%= t("plugins.jhu_public.contactus.corresponding_repo.heading") %></strong><br />
+          <% top_repo_uri = @repo_info["top"]["uri"] %>
+          <%= render partial: 'shared/repository_contact', locals: {:info => @repo_info, :url => @repo_info['top']['url'],
+                                                                    :mail_subject => mail_subject, :mail_title => mail_title} %>
+        <% end %>
+        <% repo_info = repositories[admin_repo_uri] %>
+        <% unless admin_repo_uri.nil? || repo_info.nil? || admin_repo_uri==top_repo_uri %>
+          <br /><strong><%= t("plugins.jhu_public.contactus.admin_repo.heading") %></strong><br />
+          <%= render partial: 'shared/repository_contact', locals: {:info => repo_info, :url => repo_info['top']['url'],
+                                                                    :mail_subject => mail_subject, :mail_title => mail_title} %>
+        <% end %>
+
+        <% other_repo_keys = repositories.keys - [admin_repo_uri, top_repo_uri, '', nil] %>
+        <% unless other_repo_keys.empty? %>
+          <br /><strong><%= t("plugins.jhu_public.contactus.other_repo.heading") %></strong><br />
+          <% other_repo_keys.each do |uri| %>
+            <% repo_info = repositories[uri] %>
+            <%= render partial: 'shared/repository_contact', locals: {:info => repo_info, :url => repo_info['top']['url'],
+                                                                      :mail_subject => mail_subject, :mail_title => mail_title} %>
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+  <!--
   <div class="row">
      <div class="col-md-12">
        <p class="footer-items"><a href="<%= AppConfig[:frontend_proxy_url] %>">Staff Interface</a>
@@ -7,4 +63,5 @@
          | <% if AppConfig[:feedback_url] && !AppConfig[:feedback_url].blank? %><a id='aspaceFeedbackLink' href='<%= AppConfig[:feedback_url]%>' target='_blank'>Send Feedback or Report a Problem</a><% end %></p>
      </div>
   </div>
+  -->
 </div>
