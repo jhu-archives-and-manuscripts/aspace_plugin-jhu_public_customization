@@ -1,0 +1,134 @@
+en:
+  brand:
+    title: Johns Hopkins University Libraries Archives Public Interface
+    home: Home
+    welcome_message: Welcome to %{service_name}
+    welcome_search_label: >
+      Search the libraries' collection guides for university records and manuscript collections.
+
+  plugins:
+    jhu_public:
+      brand:
+        applabel: ArchivesSpace
+
+      contactus:
+        name:
+          short: Contact Us
+          long: Contact Us
+        url: "#"
+        ref_url:
+          label: 'Reference this link: '
+        phone:
+          label: 'Phone: '
+          value: '410-516-8348'
+        email:
+          label: 'Email: '
+          value: 'specialcollections@lists.jhu.edu'
+        address:
+          label: ''
+          value: 'Brody Learning Commons, Room 2045<br />3400 N. Charles Street<br />Baltimore, Maryland<br />21218 USA'
+
+      instrepo:
+        role: institutional repository
+        name:
+          short: JScholarship
+          long: JScholarship
+        url: https://jscholarship.library.jhu.edu/
+
+      datarepo:
+        role: data repository
+        name:
+          short: The JHU Data Archive
+          long: The Johns Hopkins University Data Archive
+        url: https://archive.data.jhu.edu/
+
+      levycoll:
+        role: collection
+        name:
+          short: The Levy Sheet Music Collection
+          long: The Lester S. Levy Sheet Music Collection
+        url: http://levysheetmusic.mse.jhu.edu/
+
+      identifier: Identifier
+
+      digicoll:
+        heading: 'For access to our digital collections, please visit:'
+
+      jhu_nav:
+        menu_heading: 'RETURN TO YOUR LIBRARY:'
+        links:
+          - {'link': 'http://library.jhu.edu/', 'label': 'Sheridan Libraries' }
+          - {'link': 'http://welch.jhmi.edu/', 'label': 'Welch Medical Library' }
+          - {'link': 'http://www.sais-jhu.edu/library/', 'label': 'SAIS Library' }
+          - {'link': 'http://musiclibrary.peabody.jhu.edu/', 'label': 'Friedheim Library' }
+          - {'link': 'https://aplweb/departments/itsd/iks/Pages/IKS.aspx', 'label': 'APL Library' }
+
+      app_nav:
+        menu_heading: MENU
+        filter_heading: 'Show/Hide Search Filters'
+
+  # make changes to this one. it is merged into others below.
+  local_component_pui_sections: &pui_component_sections
+    section:
+      components: Collection Details
+      summary: Summary
+
+  archival_object:
+    _public:
+      << : *pui_component_sections
+      messages:
+        no_components: Archival Object has no components
+
+  resource:
+    _singular: Collection
+    _plural: Collections
+    _public:
+      << : *pui_component_sections
+      messages:
+        no_components: Resource has no components
+
+  digital_object: &digital_object_attributes
+    _public:
+      << : *pui_component_sections
+      messages:
+        no_components: Digital Object has no components
+
+  digital_object_component:
+    _public:
+      << : *pui_component_sections
+      messages:
+        no_components: Digital Object Component has no components
+
+
+  record_tree:
+    record_tree_tab: Collection Details
+    search_tab: Search this Collection
+
+  # this should be updated from common/locales/en.yml "linked_agent" after upgrades
+  linked_agent: &linked_agent_attributes
+    role: Role
+    role_tooltip: |
+        <p>REQUIRED FIELD. An indication of what function (creator, source, or subject) the Agent has in regards to its link to a certain description record.</p>
+    relator: Relator
+    relator_tooltip: |
+        <p>An indication of what role the Agent has in regards to its function as indicated in how it is linked (e.g., creator, source, or subject) to a certain description record. For example, a Agent may be linked as a creator to a record, but with the more specific role of "illustrator".</p>
+        <p>See MARC Code List for Relators.</p>
+    ref: Agent
+    # ref_tooltip is not displaying
+    ref_tooltip: |
+        <p>The Agent related to the material described in the record.</p>
+        <p>Agents may be searched using auto-complete, using a browse function, or may be created on demand.</p>
+    terms: Terms
+    title: Title
+    title_tooltip: |
+        <p>Optional field: Record here the authoritative title of a work in order to make a Name / Title heading for an agent linked as a creator or a subject:</p>
+        <p>For example,</p>
+        <ul><li>Shakespeare, William, 1564-1616. King Lear</li><li> Pound, Ezra, 1885-1972. Cantos</li><li> Lincoln, Abraham, 1809-1865. Emancipation Proclamation</li></ul>
+    _singular: Agent Link
+    _plural: Agent Links
+
+  # this is the override for linked agents
+  linked_agent:
+    << : *linked_agent_attributes
+    _singular: Name
+    _plural: Names
