@@ -97,4 +97,107 @@ ArchivesSpacePublic::Application.config.after_initialize do
 
   end
 
+
+  ResourcesController
+  class ResourcesController
+
+    # override show, infinite, and inventory methods and add resource_breadcrumb method to modularize breadcrumb config
+    def show
+      uri = "/repositories/#{params[:rid]}/resources/#{params[:id]}"
+      begin
+        @criteria = {}
+        @criteria['resolve[]']  = ['repository:id', 'resource:id@compact_resource', 'top_container_uri_u_sstr:id', 'related_accession_uris:id', 'digital_object_uris:id']
+
+        tree_root = archivesspace.get_raw_record(uri + '/tree/root') rescue nil
+        @has_children = tree_root && tree_root['child_count'] > 0
+        @has_containers = has_containers?(uri)
+
+        @result =  archivesspace.get_record(uri, @criteria)
+        @repo_info = @result.repository_information
+        @page_title = "#{I18n.t('resource._singular')}: #{strip_mixed_content(@result.display_string)}"
+        # @context = [{:uri => @repo_info['top']['uri'], :crumb => @repo_info['top']['name']}, {:uri => nil, :crumb => "xxx #{@result.identifier} #{process_mixed_content(@result.display_string)}"}]
+        @context = resource_breadcrumb
+        #      @rep_image = get_rep_image(@result['json']['instances'])
+        fill_request_info
+      rescue RecordNotFound
+        @type = I18n.t('resource._singular')
+        @page_title = I18n.t('errors.error_404', :type => @type)
+        @uri = uri
+        @back_url = request.referer || ''
+        render  'shared/not_found', :status => 404
+      end
+    end
+
+    def infinite
+      @root_uri = "/repositories/#{params[:rid]}/resources/#{params[:id]}"
+      begin
+        @criteria = {}
+        @criteria['resolve[]']  = ['repository:id', 'resource:id@compact_resource', 'top_container_uri_u_sstr:id', 'related_accession_uris:id']
+        @result =  archivesspace.get_record(@root_uri, @criteria)
+        @has_containers = has_containers?(@root_uri)
+
+        @repo_info = @result.repository_information
+        @page_title = "#{I18n.t('resource._singular')}: #{strip_mixed_content(@result.display_string)}"
+        # @context = [{:uri => @repo_info['top']['uri'], :crumb => @repo_info['top']['name']}, {:uri => nil, :crumb => "yyy [#{@result.identifier}] #{process_mixed_content(@result.display_string)}"}]
+        @context = resource_breadcrumb
+        fill_request_info
+        @ordered_records = archivesspace.get_record(@root_uri + '/ordered_records').json.fetch('uris')
+      rescue RecordNotFound
+        @type = I18n.t('resource._singular')
+        @page_title = I18n.t('errors.error_404', :type => @type)
+        @uri = @root_uri
+        @back_url = request.referer || ''
+        render  'shared/not_found', :status => 404
+      end
+    end
+
+    def inventory
+      uri = "/repositories/#{params[:rid]}/resources/#{params[:id]}"
+
+      tree_root = archivesspace.get_raw_record(uri + '/tree/root') rescue nil
+      @has_children = tree_root && tree_root['child_count'] > 0
+
+      begin
+        # stuff for the collection bits
+        @criteria = {}
+        @criteria['resolve[]']  = ['repository:id', 'resource:id@compact_resource', 'top_container_uri_u_sstr:id', 'related_accession_uris:id']
+        @result =  archivesspace.get_record(uri, @criteria)
+        @repo_info = @result.repository_information
+        @page_title = "#{I18n.t('resource._singular')}: #{strip_mixed_content(@result.display_string)}"
+        # @context = [{:uri => @repo_info['top']['uri'], :crumb => @repo_info['top']['name']}, {:uri => nil, :crumb => "zzz [#{@result.identifier}] #{process_mixed_content(@result.display_string)}"}]
+        @context = resource_breadcrumb
+        fill_request_info
+
+        # top container stuff ... sets @records
+        fetch_containers(uri, "#{uri}/inventory", params)
+
+        if !@results.blank?
+          params[:q] = '*'
+          @pager =  Pager.new(@base_search, @results['this_page'], @results['last_page'])
+        else
+          @pager = nil
+        end
+
+      rescue RecordNotFound
+        @type = I18n.t('resource._singular')
+        @page_title = I18n.t('errors.error_404', :type => @type)
+        @uri = uri
+        @back_url = request.referer || ''
+        render  'shared/not_found', :status => 404
+      end
+    end
+
+    # add identifier to top-level resource/collection context/breadcrumb
+    def resource_breadcrumb
+      [
+          {:uri => @repo_info['top']['uri'], :crumb => @repo_info['top']['name'], :level => "Repository", :type => "repository"},
+          {:uri => nil, :crumb => process_mixed_content(@result.display_string),
+           :identifier => @result.identifier, :level => "collection", :type => "resource"}
+      ]
+
+    end
+
+  end
+
+
 end
