@@ -13,7 +13,7 @@ ArchivesSpacePublic::Application.config.after_initialize do
     end
 
     def parse_repository_info(repository)
-      # this is just a paramerterized version of public/app/models/record.rb:parse_repository_info()
+      # this is just a parameterized version of public/app/models/record.rb:parse_repository_info()
       info = {}
       info['top'] = {}
       unless repository.nil?
