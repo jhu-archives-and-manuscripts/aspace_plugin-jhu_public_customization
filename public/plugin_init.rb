@@ -49,14 +49,14 @@ ArchivesSpacePublic::Application.config.after_initialize do
   Record
   class Record
 
-    # pre-override baseline of Record::parse_sub_container_display_string
+    # include barcodes in top container summary information by overriding Record::parse_sub_container_display_string
     def parse_sub_container_display_string(sub_container, inst, opts = {})
       summary = opts.fetch(:summary, false)
       parts = []
 
       instance_type = I18n.t("enumerations.instance_instance_type.#{inst.fetch('instance_type')}", :default => inst.fetch('instance_type'))
 
-      # add the top container type and indicator
+      # add the top container type, indicator, and barcode (if available)
       if sub_container.has_key?('top_container')
         top_container_solr = top_container_for_uri(sub_container['top_container']['ref'])
         if top_container_solr
@@ -70,13 +70,15 @@ ArchivesSpacePublic::Application.config.after_initialize do
             top_container_display_string << "#{I18n.t('enumerations.container_type.container')}: "
           end
           top_container_display_string << top_container_json.fetch('indicator')
+          if top_container_json['barcode']
+            top_container_display_string << " [#{top_container_json.fetch('barcode')}]"
+          end
           parts << top_container_display_string
         elsif sub_container['top_container']['_resolved'] && sub_container['top_container']['_resolved']['display_string']
           # We have a resolved top container with a display string
           parts << sub_container['top_container']['_resolved']['display_string']
         end
       end
-
 
       # add the child type and indicator
       if sub_container['type_2'] && sub_container['indicator_2']
