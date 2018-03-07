@@ -15,18 +15,15 @@ en:
         name:
           short: Contact Us
           long: Contact Us
-        url: "#"
+        admin_repo:
+          uri: /repositories/3
+          heading: Administrative Contact
+        corresponding_repo:
+          heading: Corresponding Repository
+        other_repo:
+          heading: Other Repositories
         ref_url:
           label: 'Reference this link: '
-        phone:
-          label: 'Phone: '
-          value: '410-516-8348'
-        email:
-          label: 'Email: '
-          value: 'specialcollections@lists.jhu.edu'
-        address:
-          label: ''
-          value: 'Brody Learning Commons, Room 2045<br />3400 N. Charles Street<br />Baltimore, Maryland<br />21218 USA'
 
       instrepo:
         role: institutional repository
