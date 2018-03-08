@@ -4,7 +4,11 @@
       <ul class="breadcrumb">
 	<% @context.each do |bread| %>
 	<% if bread[:crumb] %>
-	<li><% if bread[:uri].blank? %><%= process_mixed_content(bread[:crumb]).html_safe %>
+	<li>
+		<% if bread.key?(:identifier) %>
+			[<%= process_mixed_content(bread[:identifier]).html_safe %>]
+		<% end %>
+		<% if bread[:uri].blank? %><%= process_mixed_content(bread[:crumb]).html_safe %>
 	  <% else %> <a href='<%=app_prefix(bread[:uri]) %>'><%=  process_mixed_content(bread[:crumb]).html_safe %></a>
 	  <% end %>
 	</li>
