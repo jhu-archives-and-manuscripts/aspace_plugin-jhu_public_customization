@@ -13,7 +13,7 @@
 		<% end %>
 		<%= render partial: 'shared/breadcrumb_badge', locals: {:result => bread } %>
 
-		<% if bread.key?(:identifier) %>
+		<% if bread.key?(:identifier) && !bread[:identifier].blank?  %>
 			[<%= process_mixed_content(bread[:identifier]).html_safe %>]
 		<% end %>
 		<% if bread[:uri].blank? %><%= process_mixed_content(bread[:crumb]).html_safe %>
