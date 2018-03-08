@@ -225,7 +225,6 @@ ArchivesSpacePublic::Application.config.after_initialize do
           :crumb => display_string
       }
 
-      puts "<<< crumbs: #{crumbs.inspect} >>>"
       crumbs
     end
 
