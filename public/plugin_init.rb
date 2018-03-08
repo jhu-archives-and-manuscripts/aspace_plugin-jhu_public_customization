@@ -210,6 +210,7 @@ ArchivesSpacePublic::Application.config.after_initialize do
         resolved_node = resolve_node(breadcrumb_uri_for_node(node))
         crumbs << {
             :uri => breadcrumb_uri_for_node(node),
+            :identifier => breadcrumb_identifier(resolved_node),
             :type => breadcrumb_type(resolved_node),
             :level => breadcrumb_level(resolved_node),
             :crumb => breadcrumb_title_for_node(node, level)
@@ -230,6 +231,10 @@ ArchivesSpacePublic::Application.config.after_initialize do
 
   end
 
+  def breadcrumb_identifier(node)
+    node['id_0'].nil? ? nil : display_id(node,'-')
+  end
+
   def breadcrumb_type(node)
     node.fetch('jsonmodel_type')
   end
@@ -245,6 +250,10 @@ ArchivesSpacePublic::Application.config.after_initialize do
       $stderr.puts "RecordNotFound: #{"#{uri}"}"
       []
     end
+  end
+
+  def display_id(resource, sep='-')
+    (['id_0', 'id_1', 'id_2', 'id_3'].collect{|attr| resource[attr]} - ['', nil]).join(sep)
   end
 
 
