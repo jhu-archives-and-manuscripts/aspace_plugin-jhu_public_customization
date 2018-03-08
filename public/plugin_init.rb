@@ -200,4 +200,52 @@ ArchivesSpacePublic::Application.config.after_initialize do
   end
 
 
+  module TreeNodes
+
+    def breadcrumb
+      crumbs = []
+
+      # add all ancestors to breadcrumb
+      path_to_root.each_with_index do |node, level|
+        resolved_node = resolve_node(breadcrumb_uri_for_node(node))
+        crumbs << {
+            :uri => breadcrumb_uri_for_node(node),
+            :type => breadcrumb_type(resolved_node),
+            :level => breadcrumb_level(resolved_node),
+            :crumb => breadcrumb_title_for_node(node, level)
+        }
+      end
+
+      # and now yourself
+      crumbs << {
+          :uri => '',
+          :type => primary_type,
+          :level => level,
+          :crumb => display_string
+      }
+
+      puts "<<< crumbs: #{crumbs.inspect} >>>"
+      crumbs
+    end
+
+  end
+
+  def breadcrumb_type(node)
+    node.fetch('jsonmodel_type')
+  end
+
+  def breadcrumb_level(node)
+    node.fetch('level')
+  end
+
+  def resolve_node(uri)
+    begin
+      archives_space_client.get_raw_record("#{uri}")
+    rescue RecordNotFound => e
+      $stderr.puts "RecordNotFound: #{"#{uri}"}"
+      []
+    end
+  end
+
+
 end
