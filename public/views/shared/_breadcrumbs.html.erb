@@ -5,6 +5,8 @@
 	<% @context.each do |bread| %>
 	<% if bread[:crumb] %>
 	<li>
+		<%= render partial: 'shared/breadcrumb_badge', locals: {:result => bread } %>
+
 		<% if bread.key?(:identifier) %>
 			[<%= process_mixed_content(bread[:identifier]).html_safe %>]
 		<% end %>

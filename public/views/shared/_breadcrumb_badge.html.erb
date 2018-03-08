@@ -1,0 +1,19 @@
+<% # borrowed heavily shared/_idbadge.html.erb
+if result[:level]
+    if result[:type] =~ /digital_object/
+      level = I18n.t("enumerations.digital_object_level.#{result[:level]}", :default => result[:level])
+      badge_label = I18n.t("digital_object._public.badge_label", :level => level)
+    else
+      level = result[:level] == 'otherlevel' ? result[:other_level] : result[:level]
+      badge_label = I18n.t("enumerations.archival_record_level.#{level}", :default => level)
+    end
+else
+    badge_label = t("#{result[:type]}._singular")
+end
+%>
+
+<% unless result[:type].nil? %>
+  <span class="record-type-badge <%= (result[:type].start_with?('agent') ? 'agent' : result[:type]) %>">
+    <i class="<%= icon_for_type(result[:type]) %>"></i>&#160;<%= badge_label %>
+  </span>
+<% end %>
