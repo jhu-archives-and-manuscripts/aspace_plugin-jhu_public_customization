@@ -2,9 +2,15 @@
 <div class="clear">
     <nav aria-label="hierarchical navigation">
       <ul class="breadcrumb">
-	<% @context.each do |bread| %>
+	<% @context.each_with_index do |bread, index| %>
 	<% if bread[:crumb] %>
 	<li>
+		<% if index == 0 %>
+			<%
+				bread[:type] = 'repository'
+				bread[:level] = 'Repository'
+			%>
+		<% end %>
 		<%= render partial: 'shared/breadcrumb_badge', locals: {:result => bread } %>
 
 		<% if bread.key?(:identifier) %>
