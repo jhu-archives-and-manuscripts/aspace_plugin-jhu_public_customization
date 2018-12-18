@@ -28,7 +28,7 @@
         </p> -->
       <% repositories = repository_list %>
       <% unless repositories.blank? %>
-        <% admin_repo_uri = t("plugins.jhu_public.contactus.admin_repo.uri") %>
+        <% admin_repo_uri = AppConfig[:jhu_public_customizations][:admin_repo_uri] %>
         <% if @repo_info.present? %>
           <br /><strong><%= t("plugins.jhu_public.contactus.corresponding_repo.heading") %></strong><br />
           <% top_repo_uri = @repo_info["top"]["uri"] %>

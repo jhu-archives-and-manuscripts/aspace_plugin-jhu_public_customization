@@ -16,7 +16,6 @@ en:
           short: Contact Us
           long: Contact Us
         admin_repo:
-          uri: /repositories/3
           heading: Administrative Contact
         corresponding_repo:
           heading: Corresponding Repository
