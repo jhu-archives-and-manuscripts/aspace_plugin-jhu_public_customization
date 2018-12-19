@@ -36,17 +36,17 @@
     <% end %>
 
     <% if info["address"].present? %>
-    <span class="street">
-      <%= info["address"].join(" <br/>").html_safe %>
-      <br />
-    </span>
-  <% end %>
+      <span class="street">
+        <%= info["address"].join(" <br/>").html_safe %>
+        <br />
+      </span>
+    <% end %>
 
-  <% %w{city region post_code country}.each do |type| %>
-     <% if info[type].present? %>
-       <span class="<%= type %>"><%= info[type] %></span>
-     <% end %>
-  <% end %>
+    <% %w{city region post_code country}.each do |type| %>
+       <% if info[type].present? %>
+         <span class="<%= type %>"><%= info[type] %></span>
+       <% end %>
+    <% end %>
 
   <br/>
 
