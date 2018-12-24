@@ -6,9 +6,9 @@
       <%= render partial: 'shared/idbadge', locals: {:result => @result, :props => { :full => false} } %>
   </div>
 
-  <% scopecontent_note = @result.note('scopecontent') %>
-  <% if scopecontent_note %>
-    <%= render partial: 'shared/single_note', locals: {:type => 'abstract', :note_struct => scopecontent_note, :notitle => true} %>
+  <% overview = @result.note('abstract') %>
+  <% if overview %>
+    <%= render partial: 'shared/single_note', locals: {:type => 'abstract', :note_struct => overview, :notitle => true} %>
   <% end %>
 
   <dl class="dl-horizontal">
