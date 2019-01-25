@@ -1,14 +1,16 @@
 <!-- Look for '_inherited' and '*_inherited' properties -->
 <% non_folder = %w(summary langmaterial physdesc accessrestrict userestrict) %>
-<% folder = %w(abstract bioghist arrangement phystech physloc otherfindaid custodhist acqinfo appraisal accruals originalsloc altformavail extent relatedmaterial separatedmaterial note_bibliography materialspec physdesc inscription physfacet dimensions edition fileplan legalstatus odd note processinfo note_index) %>
+<% folder = %w(abstract bioghist scopecontent arrangement phystech physloc otherfindaid custodhist acqinfo appraisal accruals originalsloc altformavail extent relatedmaterial separatedmaterial note_bibliography materialspec physdesc inscription physfacet dimensions edition fileplan legalstatus odd note processinfo note_index) %>
 <div class="upper-record-details">
-		<%
-			over = @result.note('abstract')
-			folder.shift # remove abstract from in-folder notes
-		%>
-    <% if over.blank?
+  <% # use Abstract as overview, if it is available
+     over = @result.note('abstract')
+     folder -= ['abstract']
+     if over.blank?
+       # fall back to Scope & Content Note, if no overview yet
        over = @result.note('scopecontent')
-    end %>
+       folder -= ['scopecontent']
+     end
+  %>
     <% unless over.blank? %>
       <%= render partial: 'shared/single_note', locals: {:type => 'abstract', :note_struct => over, :notitle => true} %>
     <% end %>
